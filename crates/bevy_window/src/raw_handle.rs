@@ -9,6 +9,8 @@ use raw_window_handle::{
 };
 use std::sync::Mutex;
 
+use crate::window;
+
 /// A wrapper over a window.
 ///
 /// This allows us to extend the lifetime of the window, so it doesn't get eagerly dropped while a
@@ -47,7 +49,7 @@ impl<W: 'static> Deref for WindowWrapper<W> {
 /// thread-safe.
 #[derive(Debug, Clone, Component)]
 pub struct RawHandleWrapper {
-    _window: Arc<dyn Any + Send + Sync>,
+    pub _window: Arc<dyn Any + Send + Sync>,
     /// Raw handle to a window.
     pub window_handle: RawWindowHandle,
     /// Raw handle to the display server.
@@ -65,6 +67,20 @@ impl RawHandleWrapper {
             display_handle: window.display_handle()?.as_raw(),
         })
     }
+
+    /// unsafe constructor for `RawHandleWrapper` from raw handles.
+    pub fn from_handles(
+        window_handle: RawWindowHandle,
+        display_handle: RawDisplayHandle,
+    ) -> Result<RawHandleWrapper, HandleError> {
+        Ok(RawHandleWrapper {
+            _window: Arc::new(0),
+            window_handle,
+            display_handle,
+        })
+    }
+
+
 
     /// Returns a [`HasWindowHandle`] + [`HasDisplayHandle`] impl, which exposes [`WindowHandle`] and [`DisplayHandle`].
     ///
