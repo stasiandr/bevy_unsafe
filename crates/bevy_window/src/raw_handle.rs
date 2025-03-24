@@ -54,6 +54,7 @@ pub struct RawHandleWrapper {
     pub window_handle: RawWindowHandle,
     /// Raw handle to the display server.
     pub display_handle: RawDisplayHandle,
+    
 }
 
 impl RawHandleWrapper {
